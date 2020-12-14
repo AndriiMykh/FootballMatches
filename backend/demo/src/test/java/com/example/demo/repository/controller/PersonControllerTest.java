@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -18,6 +19,7 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -26,6 +28,8 @@ import com.example.demo.DemoApplication;
 import com.example.demo.entity.Person;
 import com.example.demo.exception.DataNotFoundException;
 import com.example.demo.service.PersonService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebMvcTest(PersonController.class)
 class PersonControllerTest {
@@ -36,6 +40,8 @@ class PersonControllerTest {
 	@MockBean
 	private PersonService service;
 
+    @Autowired
+    private ObjectMapper objectMapper;
 	private String request="http://localhost:8080/api/persons/";
 	@Test
 	void shouldReturnAllValuesOnGetMapping() throws Exception {
@@ -80,6 +86,15 @@ class PersonControllerTest {
 		 	.andReturn();
 		
 		assertTrue(result.getResponse().getContentAsString().contains("Not found a user with id:"+personId));
+	}
+	
+	@Test
+	void shouldSavePerson() throws JsonProcessingException, Exception {
+		Person somePerson = new Person(4L,"Andrii", "682303412@mail.ru", "682303412", "1111");
+		mockMVC.perform(post(request)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(somePerson)))
+				.andExpect(status().isCreated());
 	}
 	private List<Person> personList(){
 		Person firstPerson = new Person(1L,"Andrii", "682303412@mail.ru", "682303412", "1111");

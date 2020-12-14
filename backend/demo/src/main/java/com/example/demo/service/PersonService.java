@@ -27,7 +27,7 @@ public class PersonService {
 		return repo.findById(id);
 	}
 	
-	public void Person(Person person) {
+	public void savePerson(Person person) {
 		repo.save(person);
 	}
 
