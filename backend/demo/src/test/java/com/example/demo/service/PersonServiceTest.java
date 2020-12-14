@@ -13,6 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static org.assertj.core.api.Assertions.*;
+
+import com.example.demo.DemoApplication;
 import com.example.demo.entity.Person;
 import com.example.demo.repository.PersonRepository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,13 +42,15 @@ class PersonServiceTest {
 	void shouldReturnPersonById() {
 		Long personId = 1L;
 		Person person = personList().stream().filter(streamPerson-> 
-		streamPerson.getId()==personId).collect(toSingleton());
+		streamPerson.getId()==personId).collect(DemoApplication.toSingleton());
 		given(service.returnPersonById(personId)).willReturn(Optional.of(person));
 		Optional<Person> searchPerson = service.returnPersonById(personId);
 		assertThat(searchPerson.get().getName()).isEqualTo("Andrii");
 		
 	}
 
+
+	
 	private List<Person> personList(){
 		Person firstPerson = new Person(1L,"Andrii", "682303412@mail.ru", "682303412", "1111");
 		Person secondPerson = new Person(2L,"Vasya", "682303434@mail.ru", "682303434", "1111");
@@ -58,16 +62,6 @@ class PersonServiceTest {
 		return persons;
 		
 	}
-	
-	public static <T> Collector<T, ?, T> toSingleton() {
-	    return Collectors.collectingAndThen(
-	            Collectors.toList(),
-	            list -> {
-	                if (list.size() != 1) {
-	                    throw new IllegalStateException();
-	                }
-	                return list.get(0);
-	            }
-	    );
-	}
+
+
 }
