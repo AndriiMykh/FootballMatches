@@ -1,12 +1,12 @@
-package com.example.demo.repository.controller;
+package com.example.demo.controller;
 
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import com.example.demo.DemoApplication;
+import com.example.demo.controller.PersonController;
 import com.example.demo.entity.Person;
 import com.example.demo.exception.DataNotFoundException;
 import com.example.demo.service.PersonService;
@@ -96,6 +98,55 @@ class PersonControllerTest {
 				.content(objectMapper.writeValueAsString(somePerson)))
 				.andExpect(status().isCreated());
 	}
+	
+	@Test
+	void shouldUpdatePersonById() throws JsonProcessingException, Exception {
+		Person updatedPerson = new Person(1L,"Katya", "213432432123@mail.ru", "213432432123", "1111");
+		Person oldperson=personList().stream().filter(person->person.getId().equals(updatedPerson.getId())).collect(DemoApplication.toSingleton());
+		
+		given(service.returnPersonById(updatedPerson.getId())).willReturn(Optional.of(oldperson));
+		
+		mockMVC.perform(put(request+"id/"+updatedPerson.getId())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(updatedPerson)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.name",is(updatedPerson.getName())))
+				.andExpect(jsonPath("$.email",is(updatedPerson.getEmail())))
+				.andExpect(jsonPath("$.phoneNumber",is(updatedPerson.getPhoneNumber())));
+	}
+	
+	@Test
+	void shouldThrowDataNotFound() throws Exception {
+		long id =50L;
+		given(service.returnPersonById(id)).willReturn(Optional.empty());
+		Person updatedPerson = new Person(1L,"Katya", "213432432123@mail.ru", "213432432123", "1111");
+		mockMVC.perform(put(request+"id/"+id)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(updatedPerson)))
+				.andExpect(status().isNotFound());
+	}
+	
+	@Test
+	void shouldUseDeleteMethod() throws Exception {
+		long id =50L;
+		Person deletedPerson = new Person(50L,"Katya", "213432432123@mail.ru", "213432432123", "1111");
+        
+		given(service.returnPersonById(id)).willReturn(Optional.of(deletedPerson));
+        doNothing().when(service).deleteById(id);
+		
+        mockMVC.perform(delete(request+"id/"+id))
+        	.andExpect(status().isOk());
+	}
+	
+	@Test
+	void shouldReturnWhenDelitingNonExistingPerson() throws Exception {
+		long id =50L;
+		given(service.returnPersonById(id)).willReturn(Optional.empty());
+		
+        mockMVC.perform(delete(request+"id/"+id))
+        	.andExpect(status().isNotFound());
+	}
+	
 	private List<Person> personList(){
 		Person firstPerson = new Person(1L,"Andrii", "682303412@mail.ru", "682303412", "1111");
 		Person secondPerson = new Person(2L,"Vasya", "682303434@mail.ru", "682303434", "1111");
@@ -105,7 +156,8 @@ class PersonControllerTest {
 		persons.add(secondPerson);
 		persons.add(thirdPerson);
 		return persons;
-		
 	}
+	
+	
 
 }
