@@ -1,10 +1,15 @@
 package com.example.demo.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 
 @Entity
@@ -20,6 +25,18 @@ public class Person {
 	private String phoneNumber;
 	@NotNull
 	private String password;
+	@OneToMany
+	@JsonIgnore
+	private List<Event> events=new ArrayList<>();
+	
+	public List<Event> getEvents() {
+		return events;
+	}
+	public void setEvents(Event event) {
+		event.setPerson(this);
+		this.events.add(event);
+		
+	}
 	public Person() {
 	}
 	public Person(String name, String email, String phoneNumber, String password) {
@@ -37,6 +54,7 @@ public class Person {
 		this.phoneNumber = phoneNumber;
 		this.password = password;
 	}
+	
 	public String getName() {
 		return name;
 	}

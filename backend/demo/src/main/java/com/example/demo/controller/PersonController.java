@@ -1,10 +1,7 @@
 package com.example.demo.controller;
 
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -67,4 +64,9 @@ public class PersonController {
 			return ResponseEntity.ok(person);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
 	}
+	
+//	@PostMapping("/signUserToEvent")
+//	public void signUserToEvent() {
+//		
+//	}
 }
