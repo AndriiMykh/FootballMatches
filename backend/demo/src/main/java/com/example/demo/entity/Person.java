@@ -7,7 +7,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
@@ -25,17 +28,17 @@ public class Person {
 	private String phoneNumber;
 	@NotNull
 	private String password;
-	@OneToMany
+	@ManyToMany
 	@JsonIgnore
+	@JoinTable(
+	      name="person_events",
+	      joinColumns={ @JoinColumn(name="person_id", referencedColumnName="id") },
+	      inverseJoinColumns={ @JoinColumn(name="event_id", referencedColumnName="id")}
+	)
 	private List<Event> events=new ArrayList<>();
 	
 	public List<Event> getEvents() {
 		return events;
-	}
-	public void setEvents(Event event) {
-		event.setPerson(this);
-		this.events.add(event);
-		
 	}
 	public Person() {
 	}
@@ -81,6 +84,12 @@ public class Person {
 	}
 	public Long getId() {
 		return id;
+	}
+	
+	@Override
+	public String toString() {
+		return "Person [id=" + id + ", name=" + name + ", email=" + email + ", phoneNumber=" + phoneNumber
+				+ ", password=" + password + ", events=" + events + "]";
 	}
 	@Override
 	public int hashCode() {
