@@ -8,6 +8,7 @@ create table person(
 create table event(
 	id integer primary key,
 	place varchar(50),
+	available_places integer,
 	time timestamp
 );
 create table person_events(
