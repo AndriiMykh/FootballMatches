@@ -19,6 +19,7 @@ import com.example.demo.entity.Event;
 import com.example.demo.entity.Person;
 import com.example.demo.exception.AlreadyPresentOnEventListException;
 import com.example.demo.exception.DataNotFoundException;
+import com.example.demo.exception.NoAvailablePlacesException;
 import com.example.demo.repository.EventRepository;
 import com.example.demo.service.EventService;
 import com.example.demo.service.PersonService;
@@ -79,11 +80,15 @@ public class PersonController {
 				.orElseThrow(() ->  new DataNotFoundException("Not found a user with id:" + personId));
 		Event event = eventService.returnEventById(eventId)
 				.orElseThrow(() -> new DataNotFoundException("Not found an event with id:" + eventId));
-		if(!person.getEvents().contains(event)) {
+		if(!person.getEvents().contains(event)&&event.getAvailablePLaces()>0) {
+			event.setAvailablePLaces(event.getAvailablePLaces()-1);
 			person.getEvents().add(event);
 			event.getPersons().add(person);
 			personService.savePerson(person);
+			eventService.save(event);
 			return ResponseEntity.ok(event);
+		} else if(event.getAvailablePLaces()<=0){
+			throw new NoAvailablePlacesException();
 		}
 		else
 			throw new AlreadyPresentOnEventListException();

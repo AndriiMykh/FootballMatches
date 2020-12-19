@@ -7,10 +7,13 @@ import java.util.Optional;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import org.assertj.core.condition.AnyOf;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.internal.matchers.Any;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static org.assertj.core.api.Assertions.*;
 
@@ -20,6 +23,7 @@ import com.example.demo.repository.PersonRepository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.when;
+
 
 @ExtendWith(MockitoExtension.class)
 class PersonServiceTest {
@@ -48,7 +52,20 @@ class PersonServiceTest {
 		assertThat(searchPerson.get().getName()).isEqualTo("Andrii");
 		
 	}
-
+	
+	@Test
+	void shouldSavePersonSuccesfully() {
+		Person firstPerson = new Person(1L,"Andrii", "682303412@mail.ru", "682303412", "1111");
+		when(service.savePerson(Mockito.any(Person.class))).thenAnswer(i -> i.getArguments()[0]);
+		assertThat(service.savePerson(firstPerson)).isInstanceOf(Person.class);
+	}
+	
+	@Test
+	void shouldDeleteItemById() {
+		service.deleteById(1L);
+		verify(repo, atLeastOnce()).deleteById(1L);
+		verify(repo, never()).deleteById(2L);
+	}
 
 	
 	private List<Person> personList(){

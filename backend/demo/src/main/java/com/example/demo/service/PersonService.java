@@ -27,8 +27,8 @@ public class PersonService {
 		return repo.findById(id);
 	}
 	
-	public void savePerson(Person person) {
-		repo.save(person);
+	public Person savePerson(Person person) {
+		return repo.save(person);
 	}
 
 	public void deleteById(Long id) {
