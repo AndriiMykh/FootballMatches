@@ -99,6 +99,14 @@ class PersonControllerTest {
 	}
 
 	@Test
+	void shouldThrowEmailAlreadyBusyException() throws JsonProcessingException, Exception {
+		Person somePerson = new Person("Andrii", "682303412@mail.ru", "682303412", "1111");
+		given(personService.findByEmail(somePerson.getEmail())).willReturn(Optional.of(somePerson));
+		mockMVC.perform(post(request).contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(somePerson)))
+				.andExpect(status().isConflict());
+	}
+	@Test
 	void shouldUpdatePersonById() throws JsonProcessingException, Exception {
 		Person updatedPerson = new Person(1L, "Katya", "213432432123@mail.ru", "213432432123", "1111");
 		Person oldperson = personList().stream().filter(person -> person.getId().equals(updatedPerson.getId()))

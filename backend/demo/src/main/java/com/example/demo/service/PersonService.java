@@ -34,4 +34,8 @@ public class PersonService {
 	public void deleteById(Long id) {
 		repo.deleteById(id);
 	}
+	
+	public Optional<Person> findByEmail(String email){
+		return repo.findByEmail(email);
+	}
 }

@@ -60,4 +60,12 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         body.put("status", 409);
         return new ResponseEntity<>(body, HttpStatus.CONFLICT);	
 	}
+	@ExceptionHandler(EmailAlreadyBusyExceprion.class)
+	public ResponseEntity<Object> EmailAlreadyBusyExceprionException(EmailAlreadyBusyExceprion ex){
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", sdf.format(new Timestamp(System.currentTimeMillis())));
+        body.put("message", "Email is aready busy");
+        body.put("status", 409);
+        return new ResponseEntity<>(body, HttpStatus.CONFLICT);	
+	}
 }

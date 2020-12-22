@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ import com.example.demo.entity.Event;
 import com.example.demo.entity.Person;
 import com.example.demo.exception.AlreadyPresentOnEventListException;
 import com.example.demo.exception.DataNotFoundException;
+import com.example.demo.exception.EmailAlreadyBusyExceprion;
 import com.example.demo.exception.NoAvailablePlacesException;
 import com.example.demo.repository.EventRepository;
 import com.example.demo.service.EventService;
@@ -26,6 +28,7 @@ import com.example.demo.service.PersonService;
 
 @RestController
 @RequestMapping("/api/persons")
+@CrossOrigin("http://localhost:4200")
 public class PersonController {
 	@Autowired
 	private PersonService personService;
@@ -49,7 +52,10 @@ public class PersonController {
 	@PostMapping("/")
 	@ResponseStatus(HttpStatus.CREATED)
 	public void savePerson(@RequestBody Person person) {
-		personService.savePerson(person);
+		if(personService.findByEmail(person.getEmail()).isPresent())
+			throw new EmailAlreadyBusyExceprion();
+		else
+			personService.savePerson(person);
 	}
 
 	@PutMapping("/id/{id}")

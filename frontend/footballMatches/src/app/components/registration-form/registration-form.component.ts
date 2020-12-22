@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import{Person} from '../../common/person';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import {NotWhitespaces} from '../../common/not-whitespaces';
+import { PersonService } from '../../service/person.service';
 @Component({
   selector: 'app-registration-form',
   templateUrl: './registration-form.component.html',
@@ -9,7 +10,7 @@ import {NotWhitespaces} from '../../common/not-whitespaces';
 })
 export class RegistrationFormComponent implements OnInit {
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder,private personService:PersonService) { }
   checkoutFormGroup: FormGroup;
   person:Person;
   emailPattern= "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$";
@@ -29,6 +30,8 @@ export class RegistrationFormComponent implements OnInit {
       this.checkoutFormGroup.markAllAsTouched();
     }
     console.log(this.checkoutFormGroup.get('person').value)
+    this.personService.savePerson(this.checkoutFormGroup.get('person').value)
+
   }
   get email(){return this.checkoutFormGroup.get('person.email')}
   get password(){return this.checkoutFormGroup.get('person.password')}
