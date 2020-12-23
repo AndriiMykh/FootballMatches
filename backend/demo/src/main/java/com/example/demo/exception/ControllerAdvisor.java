@@ -61,11 +61,19 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.CONFLICT);	
 	}
 	@ExceptionHandler(EmailAlreadyBusyExceprion.class)
-	public ResponseEntity<Object> EmailAlreadyBusyExceprionException(EmailAlreadyBusyExceprion ex){
+	public ResponseEntity<Object> handleEmailAlreadyBusyExceprionException(EmailAlreadyBusyExceprion ex){
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", sdf.format(new Timestamp(System.currentTimeMillis())));
         body.put("message", "Email is aready busy");
         body.put("status", 409);
         return new ResponseEntity<>(body, HttpStatus.CONFLICT);	
+	}
+	@ExceptionHandler(WrongEmailOrPasswordException.class)
+	public ResponseEntity<Object> handleWrongEmailOrPasswordException(WrongEmailOrPasswordException ex){
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", sdf.format(new Timestamp(System.currentTimeMillis())));
+        body.put("message", "Wrong password or email");
+        body.put("status", 404);
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);	
 	}
 }

@@ -7,3 +7,6 @@
     bottom: 0;
     overflow: auto;
 }
+.alert-danger{
+    height: 6px;
+}

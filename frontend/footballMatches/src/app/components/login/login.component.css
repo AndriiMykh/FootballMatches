@@ -1,0 +1,23 @@
+.myWrapper{
+    background-color:tan;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+    
+}
+.loginForm{
+    text-align: center;
+    background-color: darkgray;
+    display: grid;
+    justify-content: center;
+    padding: 3em 2em ;
+
+}
+.col-sm{
+    margin-top: 10em;
+    display: grid;
+    justify-content: center;
+}

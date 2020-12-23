@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
@@ -30,6 +31,7 @@ import com.example.demo.DemoApplication;
 import com.example.demo.entity.Event;
 import com.example.demo.entity.Person;
 import com.example.demo.exception.AlreadyPresentOnEventListException;
+import com.example.demo.exception.WrongEmailOrPasswordException;
 import com.example.demo.service.EventService;
 import com.example.demo.service.PersonService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -175,6 +177,38 @@ class PersonControllerTest {
 		assertTrue(result.getResponse().getContentAsString().contains("No available places"));
 	}
 
+	@Test
+	void shouldLoginUser() throws Exception{
+		given(personService.findByEmailAndPassword("682303412@mail.ru", "1111"))
+			.willReturn(Optional.of(new Person(1L, "Andrii", "682303413@mail.ru", "682303412", "1111")));
+		MvcResult result = mockMVC.perform(post(request+"login")
+							.param("login", "682303412@mail.ru")
+							.param("password", "1111"))
+							.andExpect(status().isOk())
+							.andReturn();
+		assertAll(
+					()->assertTrue(result.getResponse().getContentAsString().contains("682303413@mail.ru")),
+					()->assertTrue(result.getResponse().getContentAsString().contains("1111")),
+					()->assertTrue(result.getResponse().getContentAsString().contains("Andrii")),
+					()->assertTrue(result.getResponse().getContentAsString().contains("682303412"))
+				);
+	}
+	
+	@Test
+	void shouldThrowWrongEmailOrPasswordException() throws Exception {
+		String wrongEmail="www";
+		String wrongPassword = "123";
+		given(personService.findByEmailAndPassword(wrongEmail, wrongPassword))
+			.willThrow(WrongEmailOrPasswordException.class);
+		MvcResult result=mockMVC.perform(post(request+"login")
+				.param("login", wrongEmail)
+				.param("password", wrongPassword))
+				.andExpect(status().isNotFound())
+				.andReturn();
+		
+		assertTrue(result.getResponse().getContentAsString().contains("\"message\":\"Wrong password or email\""));
+		
+	}
 	private List<Person> personList() {
 		Person firstPerson = new Person(1L, "Andrii", "682303412@mail.ru", "682303412", "1111");
 		Person secondPerson = new Person(2L, "Vasya", "682303434@mail.ru", "682303434", "1111");

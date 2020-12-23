@@ -38,4 +38,7 @@ public class PersonService {
 	public Optional<Person> findByEmail(String email){
 		return repo.findByEmail(email);
 	}
+	public Optional<Person> findByEmailAndPassword(String email, String password){
+	return repo.findByEmailAndPassword(email, password)	;
+	}
 }

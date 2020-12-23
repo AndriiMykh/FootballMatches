@@ -60,7 +60,6 @@ class EventServiceTest {
 	private List<Event> listEvents(){
 		Event firstEvent = new Event(1L,"Yunosti20",15,new Date(),
 				new Team(50L, "Legia", Country.POLAND, "someurl"),new Team(51L, "Lech", Country.POLAND, "someurl" ));
-				
 		Event secondEvent = new Event(2L,"Yunosti16",15,new Date(),
 				new Team(52L, "Shakhtar", Country.UKRAINE, "someurl"),new Team(53L, "Dynamo", Country.UKRAINE, "someurl" ));
 		Event thirdEvent = new Event(3L,"Myru3",3,new Date(),

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,6 +23,7 @@ import com.example.demo.exception.AlreadyPresentOnEventListException;
 import com.example.demo.exception.DataNotFoundException;
 import com.example.demo.exception.EmailAlreadyBusyExceprion;
 import com.example.demo.exception.NoAvailablePlacesException;
+import com.example.demo.exception.WrongEmailOrPasswordException;
 import com.example.demo.repository.EventRepository;
 import com.example.demo.service.EventService;
 import com.example.demo.service.PersonService;
@@ -98,6 +100,13 @@ public class PersonController {
 		}
 		else
 			throw new AlreadyPresentOnEventListException();
-		
+	}
+	@PostMapping("/login")
+	@ResponseStatus(HttpStatus.OK)
+	public Person loginPerson(@RequestParam("login") String login, @RequestParam("password") String password) {
+		System.out.println(login);
+		System.out.println(password);
+		return personService.findByEmailAndPassword(login, password)
+				.orElseThrow(()->new WrongEmailOrPasswordException());
 	}
 }

@@ -66,7 +66,17 @@ class PersonServiceTest {
 		verify(repo, atLeastOnce()).deleteById(1L);
 		verify(repo, never()).deleteById(2L);
 	}
-
+	
+	@Test
+	void shouldFindPersonByEmailAndPassword() {
+		String email="682303412@mail.ru";
+		String password = "1111";
+		Person person = personList().stream().filter(pers->
+			pers.getEmail().equals(email) && pers.getPassword().equals(password)
+		).collect(DemoApplication.toSingleton());
+		given(service.findByEmailAndPassword(email, password)).willReturn(Optional.of(person));
+		assertThat(service.findByEmailAndPassword(email, password)).isNotEmpty();
+	}
 	
 	private List<Person> personList(){
 		Person firstPerson = new Person(1L,"Andrii", "682303412@mail.ru", "682303412", "1111");
