@@ -21,3 +21,6 @@
     display: grid;
     justify-content: center;
 }
+.register{
+    color: dimgray;
+}

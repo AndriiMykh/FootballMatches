@@ -1,1 +1,15 @@
-<p>welcome works!</p>
+<div class="myWrapper">
+    <div class="container mt-my">
+        <div class="card cards" *ngFor="let event of events">
+            <div class="card-header d-flex justify-content-between"><img src={{event.host.imgURL}} alt="" class="logos"> 
+                -
+                <img src={{event.guest.imgURL}} alt="" class="logos"></div>
+            <div class="card-body d-flex justify-content-center">Place:{{event.place}}<br>
+                Available Places:{{event.availablePLaces}}<br>
+                Date:{{event.time |date:'medium'}}
+            </div>
+
+            <div class="card-footer"><button>Sign</button></div>
+        </div>
+    </div>
+</div>

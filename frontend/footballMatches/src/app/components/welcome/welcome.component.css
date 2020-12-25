@@ -1,0 +1,20 @@
+.myWrapper{
+    background-color:burlywood;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+}
+.mt-my{
+    margin-top: 6em;
+}
+.cards{
+    width: 30%;
+    display: inline-block;
+}
+.logos{
+    height: 2em;
+    width: 1,5em;
+}

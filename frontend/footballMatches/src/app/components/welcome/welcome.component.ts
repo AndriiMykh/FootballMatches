@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { EventsService } from '../../service/events.service';
+import {Event} from '../../common/event';
 
 @Component({
   selector: 'app-welcome',
@@ -7,9 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class WelcomeComponent implements OnInit {
 
-  constructor() { }
+  constructor(private eventService:EventsService) { }
 
+  events:Event[];
   ngOnInit(): void {
+    this.getAllEvents()
+  }
+  getAllEvents(){
+    this.eventService.getAllEvents().subscribe(
+     data=>{
+       this.events=data;
+       console.log(this.events)
+     }
+    )
   }
 
 }
