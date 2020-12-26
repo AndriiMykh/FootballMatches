@@ -2,7 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import {Event} from '../common/event'
+import {Event} from '../common/event';
+import {Team} from '../common/team';
+
 
 @Injectable({
   providedIn: 'root'
@@ -12,5 +14,8 @@ export class EventsService {
   constructor(private http: HttpClient,private route:Router) { }
   getAllEvents():Observable<Event[]>{
     return this.http.get<Event[]>(this.url);
+  }
+  getAllTeams():Observable<Team[]>{
+    return this.http.get<Team[]>(this.url+'getTeams');
   }
 }

@@ -8,10 +8,10 @@
         <div class="collapse navbar-collapse" id="navbarText">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#" *ngIf="shotButtons">Events</a>
+                    <a class="nav-link" routerLink='/welcome' *ngIf="shotButtons">Events</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="#" *ngIf="shotButtons">Create your Event</a>
+                    <a class="nav-link" routerLink='/createEvent' *ngIf="shotButtons">Create your Event</a>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="#" *ngIf="shotButtons">My events</a>

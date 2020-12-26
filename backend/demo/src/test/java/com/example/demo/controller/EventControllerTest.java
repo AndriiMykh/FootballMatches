@@ -16,6 +16,7 @@ import com.example.demo.entity.Country;
 import com.example.demo.entity.Event;
 import com.example.demo.entity.Team;
 import com.example.demo.service.EventService;
+import com.example.demo.service.TeamService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -33,6 +34,9 @@ class EventControllerTest {
 	
 	@MockBean
 	private EventService eventService;
+	
+	@MockBean
+	private TeamService teamService;
 	
 	private String path = "http://localhost:8080/api/events/";
 	
@@ -71,6 +75,20 @@ class EventControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(eventWithTheSameTeams)))
 				.andExpect(status().isConflict());
+	}
+	@Test 
+	void shouldReturnTeams() throws Exception{
+		Team team1= new Team(50L, "Legia", Country.POLAND, "someurl");
+		Team team2= new Team(51L, "Lech", Country.POLAND, "someurl" );
+		List<Team> teams = new ArrayList<Team>();
+		teams.add(team1);
+		teams.add(team2);
+		given(teamService.returnAllTeams()).willReturn(teams);
+
+		
+		this.mockMVC.perform(get(path+"getTeams"))
+							.andExpect(status().isOk())
+							.andExpect(jsonPath("$.size()", is(teams.size())));
 	}
 	private List<Event> listEvents(){
 		Event firstEvent = new Event(1L,"Yunosti20",15,new Date(),

@@ -3,4 +3,5 @@ export class Team {
     name:string;
     country:string;
     imgURL:string;
+    
 }

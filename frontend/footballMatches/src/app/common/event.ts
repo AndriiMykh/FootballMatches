@@ -8,6 +8,19 @@ export class Event {
     availablePLaces:number;
     time:Date;
     persons:Person[];
-    host:Team;
-    guest:Team;
+    private _host: Team;
+
+    private _guest: Team;
+    public get host(): Team {
+        return this._host;
+    }
+    public set host(value: Team) {
+        this._host = value;
+    }
+    public get guest(): Team {
+        return this._guest;
+    }
+    public set guest(value: Team) {
+        this._guest = value;
+    }
 }
