@@ -24,13 +24,15 @@ export class PersonService {
   }
   loginPerson(login:string,password:string){
     let params = new HttpParams().set('login', login).set('password',password);
-    this.http.post(this.url+'login/',params).subscribe(
-      isValid=>{
+    this.http.post<Person>(this.url+'login/',params).subscribe(
+       data=>{
         console.log("Logged in")
+        console.log(data.id)
         this.errorMessage=null
         this.route.navigateByUrl('/welcome')
         this.loginService.isLogged.next(true);
         sessionStorage.setItem('email',login);
+        sessionStorage.setItem('id',data.id.toString());
       },
       error=>{
         this.errorMessage=error.error.message;

@@ -23,5 +23,9 @@ export class WelcomeComponent implements OnInit {
      }
     )
   }
+  subscribeToEvent(eventId:number){
+    console.log(sessionStorage.getItem('email'))
+    this.eventService.subscribeToEvent(eventId)
+  }
 
 }

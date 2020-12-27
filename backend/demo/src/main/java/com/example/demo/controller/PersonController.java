@@ -81,7 +81,7 @@ public class PersonController {
 		}).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
-	@PostMapping("/id/{personId}/signPersonToEvent/event/{eventId}")
+	@GetMapping("/id/{personId}/signPersonToEvent/event/{eventId}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<Event> signPersonToEvent(@PathVariable("personId") Long personId, @PathVariable("eventId") Long eventId) {
 		Person person = personService.returnPersonById(personId)

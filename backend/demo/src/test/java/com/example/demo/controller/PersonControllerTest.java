@@ -159,7 +159,7 @@ class PersonControllerTest {
 		
 		given(eventService.returnEventById(2L)).willReturn(Optional.of(new Event(2L, "Pushkina/40", new Date(), 5)));
 		
-		mockMVC.perform(post(request + "id/" + 1L + "/signPersonToEvent/event/" + 2L)).andExpect(status().isOk())
+		mockMVC.perform(get(request + "id/" + 1L + "/signPersonToEvent/event/" + 2L)).andExpect(status().isOk())
 				.andExpect(jsonPath("$.persons.size()", is(1)));
 
 	}
@@ -171,7 +171,7 @@ class PersonControllerTest {
 
 		given(eventService.returnEventById(2L)).willReturn(Optional.of(new Event(2L, "Pushkina/40", new Date(), 0)));
 
-		MvcResult result = mockMVC.perform(post(request + "id/" + 1L + "/signPersonToEvent/event/" + 2L))
+		MvcResult result = mockMVC.perform(get(request + "id/" + 1L + "/signPersonToEvent/event/" + 2L))
 				.andExpect(status().isConflict()).andReturn();
 
 		assertTrue(result.getResponse().getContentAsString().contains("No available places"));

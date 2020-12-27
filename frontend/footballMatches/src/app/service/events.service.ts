@@ -11,6 +11,8 @@ import {Team} from '../common/team';
 })
 export class EventsService {
   url = 'http://localhost:8080/api/events/';
+  secondURL='http://localhost:8080/api/persons/';
+  public errorMessage:string = null;
   constructor(private http: HttpClient,private route:Router) { }
   getAllEvents():Observable<Event[]>{
     return this.http.get<Event[]>(this.url);
@@ -21,10 +23,21 @@ export class EventsService {
   createEvent(event:Event){
     return this.http.post(this.url,event).subscribe(
       isValid=>{
-        alert('created')
+        this.route.navigateByUrl('/welcome');
+        this.errorMessage=null;
       },
       error=>{
-        console.log(error.error.message);
+        this.errorMessage=error.error.message;
+      }
+    )
+  }
+  subscribeToEvent(eventId:number){
+    this.http.get(this.secondURL+`id/${sessionStorage.getItem('id')}/signPersonToEvent/event/${eventId}`).subscribe(
+      isValid=>{
+        console.log("ok")
+      },
+      error=>{
+        console.error(error.error.message);
       }
     )
   }
