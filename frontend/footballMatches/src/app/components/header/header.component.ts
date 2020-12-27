@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { LoginService } from '../../service/login.service';
 
 @Component({
@@ -8,7 +9,7 @@ import { LoginService } from '../../service/login.service';
 })
 export class HeaderComponent implements OnInit {
   shotButtons:boolean=false;
-  constructor(public loginService:LoginService) {}
+  constructor(public loginService:LoginService,private router:Router) {}
 
   
   ngOnInit(): void {
@@ -22,5 +23,8 @@ export class HeaderComponent implements OnInit {
   logout(){
     sessionStorage.removeItem('email');
     this.loginService.isLogged.next(false);
+  }
+  navigateToMyEvents(){
+    this.router.navigate(['myEvents',sessionStorage.getItem('id')]);
   }
 }

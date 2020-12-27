@@ -90,6 +90,7 @@ class EventControllerTest {
 							.andExpect(status().isOk())
 							.andExpect(jsonPath("$.size()", is(teams.size())));
 	}
+
 	private List<Event> listEvents(){
 		Event firstEvent = new Event(1L,"Yunosti20",15,new Date(),
 				new Team(50L, "Legia", Country.POLAND, "someurl"),new Team(51L, "Lech", Country.POLAND, "someurl" ));

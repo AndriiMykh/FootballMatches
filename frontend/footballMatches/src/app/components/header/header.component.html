@@ -13,8 +13,8 @@
                 <li class="nav-item active">
                     <a class="nav-link" routerLink='/createEvent' *ngIf="shotButtons">Create your Event</a>
                 </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="#" *ngIf="shotButtons">My events</a>
+                <li class="nav-item active cursor">
+                    <a class="nav-link" (click)="navigateToMyEvents()" *ngIf="shotButtons">My events</a>
                 </li>
             </ul>
             <div class="nav-buttons">

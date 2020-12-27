@@ -1,6 +1,11 @@
 package com.example.demo.controller;
 
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +29,7 @@ import com.example.demo.exception.DataNotFoundException;
 import com.example.demo.exception.EmailAlreadyBusyExceprion;
 import com.example.demo.exception.NoAvailablePlacesException;
 import com.example.demo.exception.WrongEmailOrPasswordException;
-import com.example.demo.repository.EventRepository;
+
 import com.example.demo.service.EventService;
 import com.example.demo.service.PersonService;
 
@@ -54,7 +59,7 @@ public class PersonController {
 	@PostMapping("/")
 	@ResponseStatus(HttpStatus.CREATED)
 	public void savePerson(@RequestBody Person person) {
-		if(personService.findByEmail(person.getEmail()).isPresent())
+		if (personService.findByEmail(person.getEmail()).isPresent())
 			throw new EmailAlreadyBusyExceprion();
 		else
 			personService.savePerson(person);
@@ -83,30 +88,41 @@ public class PersonController {
 
 	@GetMapping("/id/{personId}/signPersonToEvent/event/{eventId}")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<Event> signPersonToEvent(@PathVariable("personId") Long personId, @PathVariable("eventId") Long eventId) {
+	public ResponseEntity<Event> signPersonToEvent(@PathVariable("personId") Long personId,
+			@PathVariable("eventId") Long eventId) {
 		Person person = personService.returnPersonById(personId)
-				.orElseThrow(() ->  new DataNotFoundException("Not found a user with id:" + personId));
+				.orElseThrow(() -> new DataNotFoundException("Not found a user with id:" + personId));
 		Event event = eventService.returnEventById(eventId)
 				.orElseThrow(() -> new DataNotFoundException("Not found an event with id:" + eventId));
-		if(!person.getEvents().contains(event)&&event.getAvailablePLaces()>0) {
-			event.setAvailablePLaces(event.getAvailablePLaces()-1);
+		if (!person.getEvents().contains(event) && event.getAvailablePLaces() > 0) {
+			event.setAvailablePLaces(event.getAvailablePLaces() - 1);
 			person.getEvents().add(event);
 			event.getPersons().add(person);
 			personService.savePerson(person);
 			eventService.save(event);
 			return ResponseEntity.ok(event);
-		} else if(event.getAvailablePLaces()<=0){
+		} else if (event.getAvailablePLaces() <= 0) {
 			throw new NoAvailablePlacesException();
-		}
-		else
+		} else
 			throw new AlreadyPresentOnEventListException();
 	}
+
 	@PostMapping("/login")
 	@ResponseStatus(HttpStatus.OK)
 	public Person loginPerson(@RequestParam("login") String login, @RequestParam("password") String password) {
 		System.out.println(login);
 		System.out.println(password);
 		return personService.findByEmailAndPassword(login, password)
-				.orElseThrow(()->new WrongEmailOrPasswordException());
+				.orElseThrow(() -> new WrongEmailOrPasswordException());
+	}
+
+	@GetMapping("/{id}/events")
+	@ResponseStatus(HttpStatus.OK)
+	public List<Event> returnAllEventsById(@PathVariable Long id) {
+		return eventService.returnAllEvents().stream()
+				.filter(event->event.getTime().after(new Date()))
+				.filter(event -> event.getPersons().stream()
+				.filter(person -> person.getId().equals(id)).count() > 0)
+				.collect(Collectors.toList());
 	}
 }

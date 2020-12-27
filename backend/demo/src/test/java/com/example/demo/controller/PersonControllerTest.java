@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -209,6 +210,7 @@ class PersonControllerTest {
 		assertTrue(result.getResponse().getContentAsString().contains("\"message\":\"Wrong password or email\""));
 		
 	}
+	
 	private List<Person> personList() {
 		Person firstPerson = new Person(1L, "Andrii", "682303412@mail.ru", "682303412", "1111");
 		Person secondPerson = new Person(2L, "Vasya", "682303434@mail.ru", "682303434", "1111");

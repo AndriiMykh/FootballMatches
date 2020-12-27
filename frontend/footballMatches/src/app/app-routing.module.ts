@@ -12,7 +12,8 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'registrationForm', component: RegistrationFormComponent },
   { path: 'welcome', component: WelcomeComponent,canActivate:[AuthGuardService] },
-  { path: 'createEvent', component: EventCreatorComponent, canActivate:[AuthGuardService] }
+  { path: 'createEvent', component: EventCreatorComponent, canActivate:[AuthGuardService] },
+  {path: 'myEvents/:id', component: WelcomeComponent,canActivate:[AuthGuardService]}
 ];
 
 @NgModule({

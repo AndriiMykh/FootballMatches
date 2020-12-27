@@ -41,4 +41,7 @@ export class EventsService {
       }
     )
   }
+  getPersonEvents(){
+   return this.http.get<Event[]>(this.secondURL+sessionStorage.getItem('id')+'/events');
+  }
 }
