@@ -23,7 +23,7 @@ public class Event {
 	private String place;
 	private int availablePlaces;
 	private Date time;
-	@ManyToMany(mappedBy = "events")
+	@ManyToMany(mappedBy = "events",fetch = FetchType.LAZY)
 	private List<Person> persons =new ArrayList<>();
 	@OneToOne
 	@JoinColumn( name = "host", referencedColumnName = "id")

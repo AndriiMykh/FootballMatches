@@ -23,4 +23,7 @@ public class TeamService {
 	public Optional<Team> returnById(long id){
 		return repo.findById(id);
 	}
+	public Optional<Team> returnByName(String name){
+		return repo.findByName(name);
+	}
 }
